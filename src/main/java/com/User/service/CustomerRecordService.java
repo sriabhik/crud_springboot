@@ -3,6 +3,7 @@ package com.User.service;
 import com.User.entities.CustomerRecord;
 import com.User.repository.CustomerRecordRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,12 +12,16 @@ public class CustomerRecordService {
     @Autowired
     private CustomerRecordRepo customerRecordRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     //create
      public CustomerRecord createCustomer(CustomerRecord saveData){
 
          CustomerRecord customerData = new CustomerRecord();
          customerData.setCustName(saveData.getCustName());
          customerData.setMobileNumber(saveData.getMobileNumber());
+         customerData.setEmail(saveData.getEmail());
+         customerData.setPassword(this.passwordEncoder.encode(saveData.getPassword()));
          CustomerRecord dataSaved = this.customerRecordRepo.save(customerData);
          return dataSaved;
 
@@ -39,6 +44,8 @@ public class CustomerRecordService {
 
                 newData.setCustName(dataUpdate.getCustName());
                 newData.setMobileNumber(dataUpdate.getMobileNumber());
+                newData.setEmail(dataUpdate.getEmail());
+                newData.setPassword(this.passwordEncoder.encode(dataUpdate.getPassword()));
                 this.customerRecordRepo.save(newData);
         }
         else{
